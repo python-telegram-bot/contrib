@@ -17,25 +17,12 @@
 # You should have received a copy of the GNU Lesser Public License
 # along with this program.  If not, see [http://www.gnu.org/licenses/].
 import logging
-import subprocess
-import sys
 import os
 import platform
 import datetime as dtm
 import pytest
 
 from telegram.ext import JobQueue, CallbackContext
-
-subprocess.check_call(
-    [
-        sys.executable,
-        "-m",
-        "pip",
-        "install",
-        "-r",
-        "ptbcontrib/ptb_sqlalchemy_jobstore/requirements.txt",
-    ]
-)
 
 from ptbcontrib.ptb_sqlalchemy_jobstore import PTBSQLAlchemyJobStore  # noqa: E402
 

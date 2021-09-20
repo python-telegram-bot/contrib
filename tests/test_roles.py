@@ -19,7 +19,6 @@
 import datetime as dtm
 import os
 import pickle
-import subprocess
 from typing import Optional
 
 import pytest
@@ -35,7 +34,6 @@ from telegram import (
     ChatMember,
     Chat,
     TelegramError,
-    __version__,
 )
 from telegram.ext import BasePersistence, CallbackContext, MessageHandler, Filters
 
@@ -49,13 +47,6 @@ from ptbcontrib.roles import (
     RolesHandler,
     RolesBotData,
 )
-
-
-@pytest.fixture(scope='module', autouse=True)
-def install_requirements():
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "-r", "ptbcontrib/roles/requirements.txt"]
-    )
 
 
 @pytest.fixture(scope='function')
@@ -604,11 +595,11 @@ class TestRoles:
     def test_add_kick_admin(self, roles):
         assert roles.admins.chat_ids == set()
         roles.add_admin(1)
-        assert roles.admins.chat_ids == set([1])
+        assert roles.admins.chat_ids == {1}
         roles.add_admin(2)
-        assert roles.admins.chat_ids == set([1, 2])
+        assert roles.admins.chat_ids == {1, 2}
         roles.kick_admin(1)
-        assert roles.admins.chat_ids == set([2])
+        assert roles.admins.chat_ids == {2}
         roles.kick_admin(2)
         assert roles.admins.chat_ids == set()
 
@@ -621,17 +612,17 @@ class TestRoles:
         assert 'role2' in roles
         assert 'role3' not in roles
 
-        a = set([name for name in roles])
-        assert a == set(['role{}'.format(k) for k in range(3)])
+        a = {name for name in roles}
+        assert a == {f'role{k}' for k in range(3)}
 
         b = {name: role.chat_ids for name, role in roles.items()}
-        assert b == {'role{}'.format(k): set([k]) for k in range(3)}
+        assert b == {f'role{k}': {k} for k in range(3)}
 
         c = [name for name in roles.keys()]
-        assert c == ['role{}'.format(k) for k in range(3)]
+        assert c == [f'role{k}' for k in range(3)]
 
         d = [r.chat_ids for r in roles.values()]
-        assert d == [set([k]) for k in range(3)]
+        assert d == [{k} for k in range(3)]
 
     def test_add_remove_role(self, roles, parent_role):
         roles.add_role('role', child_roles=[parent_role])
@@ -672,10 +663,6 @@ class TestRoles:
         roles.kick_admin(2)
         assert not test_role(update)
 
-    @pytest.mark.skipif(
-        tuple(int(x) for x in __version__.split(".")) > (13, 6),
-        reason="Not compatible with PTB version > 13.6",
-    )
     @pytest.mark.filterwarnings('ignore:BasePersistence')
     def test_pickle(self, roles, bot, base_persistence):
         base_persistence.set_bot(bot)

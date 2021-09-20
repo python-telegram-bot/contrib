@@ -87,13 +87,13 @@ Here's how to make a one-off code change.
 
      .. code-block::
 
-        $ make test
+        $ python run_tests.py -c
 
-     If you don't have ``make``, do:
+     The script `run_tests.py` is a wrapper around the `pytest` module. This is needed, because the different contributions may have different dependencies that need to be installed before running tests. For more details on the script run
 
      .. code-block::
 
-        $ pytest -v
+        $ python run_tests.py -h
 
    - To actually make the commit (this will trigger tests for black, lint and pep8 automatically):
 

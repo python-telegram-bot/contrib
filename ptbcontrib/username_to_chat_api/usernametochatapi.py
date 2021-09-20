@@ -20,9 +20,10 @@
 This module contains a class that, once initiated, works as a shortcut to the UsernameToChatAPI
 and puts the response in a Chat object, as well as puts the error to the fitting TelegramErrors.
 """
+from telegram import error, Chat, Bot
 
 try:
-    import telegram.vendor.ptb_urllib3.urllib3 as urllib3
+    from telegram.vendor.ptb_urllib3 import urllib3
 except ImportError:  # pragma: no cover
     import urllib3
 
@@ -30,8 +31,6 @@ try:
     import ujson as json
 except ImportError:  # pragma: no cover
     import json  # type: ignore[no-redef]
-
-from telegram import error, Chat, Bot
 
 
 class UsernameToChatAPI:  # pylint: disable=too-few-public-methods

@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
         include:
           - os: ubuntu-latest
             python-version: 3.7
@@ -25,6 +25,8 @@ jobs:
       fail-fast: False
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # makes sure that we also fetch main
       - name: Initialize vendored libs
         run:
           git submodule update --init --recursive
@@ -35,22 +37,23 @@ jobs:
       - name: Install dependencies
         run: |
           python -W ignore -m pip install --upgrade pip
-          python -W ignore -m pip install -U codecov pytest-cov
           python -W ignore -m pip install -r requirements.txt
           python -W ignore -m pip install -r requirements-dev.txt
 
       - name: Test with pytest
         run: |
-          pytest -v -m nocoverage
-          nocov_exit=$?
-          pytest -v -m "not nocoverage" --cov
-          cov_exit=$?
-          global_exit=$(( nocov_exit > cov_exit ? nocov_exit : cov_exit ))
-          exit ${global_exit}
+          if [[ ${{ github.event_name }} == pull_request ]]; then
+            git checkout main
+            git checkout ${{ github.event.pull_request.head.sha }}
+            python run_tests.py -c
+          else
+            python run_tests.py
+          fi
+          exit_code=$?
+          exit ${exit_code}
         env:
           JOB_INDEX: ${{ strategy.job-index }}
-          TEST_BUILD: ${{ matrix.test-build }}
-          TEST_PRE_COMMIT: ${{ matrix.test-pre-commit }}
+          TEST_BUILD: "true"
         shell: bash --noprofile --norc {0}
   test_pre_commit:
     name: test-pre-commit

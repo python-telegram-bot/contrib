@@ -396,7 +396,7 @@ class InvertedRole(UpdateFilter):
         return self.role.filter(update, inverted=True)
 
     def __repr__(self) -> str:
-        return "<inverted {}>".format(self.role)
+        return f"<inverted {self.role}>"
 
 
 class ChatAdminsRole(Role):  # pylint: disable=R0901

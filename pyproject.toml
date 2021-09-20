@@ -6,6 +6,5 @@ skip-string-normalization = true
 # We need to force-exclude the negated include pattern
 # so that pre-commit run --all-files does the correct thing
 # see https://github.com/psf/black/issues/1778
-force-exclude = '^(?!/(ptbcontrib|tests)/).*\.py$'
-include = '(ptbcontrib|tests)/.*\.py$'
-exclude = 'telegram/vendor'
+force-exclude = '^(?!/(run_tests|((ptbcontrib|tests)/).*))\.py$'
+include = '(run_tests\.py)|((ptbcontrib|tests)/.*\.py)$'

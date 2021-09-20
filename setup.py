@@ -12,7 +12,7 @@ def requirements(filename: str = 'requirements.txt') -> List[str]:
     """Build the requirements list for this project"""
     requirements_list = []
 
-    with open(filename) as file:
+    with open(filename, encoding='UTF-8') as file:
         for install in file:
             requirements_list.append(install.strip())
 

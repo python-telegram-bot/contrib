@@ -10,10 +10,11 @@ repos:
         - --diff
         - --check
 -   repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.4
+    rev: 3.9.2
     hooks:
     -   id: flake8
--   repo: local
+-   repo: https://github.com/PyCQA/pylint
+    rev: v2.10.2
     hooks:
     -   id: pylint
         name: pylint
@@ -23,8 +24,18 @@ repos:
         exclude: ^tests/
         args:
         - --rcfile=setup.cfg
+        #  run pylint across multiple cpu cores to speed it up-
+        - --jobs=0  # See https://pylint.pycqa.org/en/latest/user_guide/run.html?#parallel-execution to know more
 -   repo: https://github.com/pre-commit/mirrors-mypy
     rev: v0.790
     hooks:
     -   id: mypy
         exclude: ^tests/
+
+-   repo: https://github.com/asottile/pyupgrade
+    rev: v2.26.0
+    hooks:
+    -   id: pyupgrade
+        files: (run_tests\.py)|((ptbcontrib|tests)/.*\.py)$
+        args:
+          - --py36-plus
