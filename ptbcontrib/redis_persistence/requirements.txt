@@ -1,0 +1,2 @@
+redis-py
+python-telegram-bot>=12.0
