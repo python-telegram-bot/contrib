@@ -15,7 +15,7 @@ repos:
     hooks:
     -   id: flake8
 -   repo: https://github.com/PyCQA/pylint
-    rev: v3.3.2
+    rev: v3.3.3
     hooks:
     -   id: pylint
         name: pylint
@@ -25,12 +25,12 @@ repos:
         #  run pylint across multiple cpu cores to speed it up-
         - --jobs=0  # See https://pylint.pycqa.org/en/latest/user_guide/run.html?#parallel-execution to know more
 -   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.13.0
+    rev: v1.14.1
     hooks:
     -   id: mypy
         exclude: ^tests/
 -   repo: https://github.com/asottile/pyupgrade
-    rev: v3.19.0
+    rev: v3.19.1
     hooks:
     -   id: pyupgrade
         args:
